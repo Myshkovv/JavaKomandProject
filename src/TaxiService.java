@@ -10,6 +10,9 @@ public class TaxiService {
     private int lenDrivers;
     private int lenClients;
     private int lenRides;
+    private int nextUserId = 1;
+    private int nextRideId = 1;
+
 
     public TaxiService(User[] users, Driver[] drivers, Client[] clients, Ride[] rides){
         this.users = users;
@@ -169,6 +172,102 @@ public class TaxiService {
         }
     }
 
+    public Client registerClient(String name) {
+        Client client = new Client(nextUserId++, name);
+        addUser(client);
+        return client;
+    }
+
+    public Driver registerDriver(String name, String phone, Car car) {
+        Driver driver = new Driver(nextUserId++, name, car);
+        addUser(driver);
+        return driver;
+    }
+
+    public void deleteUser(int deleteId){
+        for (int i = 0; i < lenUsers; i++){
+            if (users[i] != null && users[i].getId() == deleteId){
+                if (users[i] instanceof Driver){
+                    deleteDriverFromArray((Driver) users[i]);
+                } else if (users[i] instanceof Client) {
+                    deleteClientFromArray((Client) users[i]);
+                }
+
+                users[i] = null;
+            }
+        }
+    }
+    public void deleteDriverFromArray(Driver driver){
+        for (int i = 0; i< lenDrivers; i++){
+            if (drivers[i] != null && drivers[i].getId() == driver.getId()) {
+                drivers[i] = null;
+            }
+        }
+    }
+    public void deleteClientFromArray(Client client){
+        for (int i = 0; i< lenClients; i++){
+            if (clients[i] != null && clients[i].getId() == client.getId()) {
+                clients[i] = null;
+            }
+        }
+    }
+
+    public User[] findUsersByName(String name){
+        User[] result = new User[lenUsers];
+        int count = 0;
+        for (int i = 0; i < lenUsers; i++){
+            if (users[i] != null && users[i].getName().equals(name)){
+                count++;
+                if (count ==1){
+                    result[count-1] = users[i];
+                } else {
+                    count++;
+                    User[] newResult = new User[count];
+                    for (int j = 0; j < result.length; j++){
+                        newResult[j] = result[j];
+                    }
+                    newResult[count-1] = users[i];
+                    result = newResult;
+                }
+            }
+        }
+        return result;
+    }
+
+    public Driver findDriversByCar(Car car){
+        for (int i = 0; i < lenDrivers; i++){
+            if (drivers[i] != null && drivers[i].getCar() == car){
+                return drivers[i];
+            }
+        }
+        return null;
+    }
+
+    public Client getMostActiveClient() {
+        if (lenClients == 0) {
+            return null;
+        }
+        Client mostActiveClient = clients[0];
+        for (int i = 0; i < lenClients; i++){
+            if (clients[i].getCountRides() >= mostActiveClient.getCountRides()){
+                mostActiveClient = clients[i];
+            }
+        }
+        return mostActiveClient;
+    }
+
+    public Driver getMostActiveDriver() {
+        if (lenDrivers == 0) {
+            return null;
+        }
+        Driver mostActiveDriver = drivers[0];
+        for (int i = 0; i < lenDrivers; i++){
+            if (drivers[i].getCountRides() >= mostActiveDriver.getCountRides()){
+                mostActiveDriver = drivers[i];
+            }
+        }
+        return mostActiveDriver;
+    }
 
 
 
@@ -176,6 +275,10 @@ public class TaxiService {
 
 
 
-    // и дальше дохрена функций
+
+
+
+
+
 
 }
