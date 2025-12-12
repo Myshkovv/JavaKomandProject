@@ -1,6 +1,8 @@
 
-public class Client {
+public class Client extends User {
 
-    private int ClientId;
+    public Client(String name, String phoneNumber, String mail) {
+        super(name, phoneNumber, mail);
+    }
 
 }
