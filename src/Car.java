@@ -32,7 +32,7 @@ public class Car {
                 }
             }
         }
-        if (!(this.tarif.equals("Premium") || this.tarif.equals("Standard"))){
+        if (this.tarif == null){
             System.out.println("Убедитесь в правильности написания марки машины. Вашей марки машины нет в списке доступных марок");
         }
     }
