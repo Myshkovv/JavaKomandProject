@@ -6,7 +6,6 @@ public class Client extends User {
     private Ride[] rides;
     private int countRides;
 
-
     public Client(String name) {
         super(name);
         this.id = id;
