@@ -10,8 +10,8 @@ public class TaxiService {
     private int lenDrivers;
     private int lenClients;
     private int lenRides;
-    private int nextUserId = 1;
-    private int nextRideId = 1;
+    private static int nextUserId = 1;
+    private static int nextRideId = 1;
 
 
     public TaxiService(User[] users, Driver[] drivers, Client[] clients, Ride[] rides){
@@ -55,6 +55,18 @@ public class TaxiService {
 
     public void setRides(Ride[] rides) {
         this.rides = rides;
+    }
+
+    public Client registerClient(String name) {
+        Client client = new Client(name);
+        addUser(client);
+        return client;
+    }
+
+    public Driver registerDriver(String name, Car car) {
+        Driver driver = new Driver(name, car);
+        addUser(driver);
+        return driver;
     }
 
     public void addUser(User newUser){
@@ -172,17 +184,7 @@ public class TaxiService {
         }
     }
 
-    public Client registerClient(String name) {
-        Client client = new Client(nextUserId++, name);
-        addUser(client);
-        return client;
-    }
 
-    public Driver registerDriver(String name, String phone, Car car) {
-        Driver driver = new Driver(nextUserId++, name, car);
-        addUser(driver);
-        return driver;
-    }
 
     public void deleteUser(int deleteId){
         for (int i = 0; i < lenUsers; i++){

@@ -7,10 +7,10 @@ public class Driver extends User {
     private Ride[] rides;
     private int countRides;
 
-    public Driver(int id, String name, Car car) {
-        this.id = id;
-        this.name = name;
+    public Driver(String name, Car car) {
+        super(name);
         this.car = car;
+
     }
 
 

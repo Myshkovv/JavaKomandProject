@@ -7,9 +7,9 @@ public class Client extends User {
     private int countRides;
 
 
-    public Client(int id, String name) {
+    public Client(String name) {
+        super(name);
         this.id = id;
-        this.name = name;
     }
 
     public Ride[] getRides() {
