@@ -10,7 +10,6 @@ public class TaxiService {
     private int lenDrivers;
     private int lenClients;
     private int lenRides;
-    private static int nextUserId = 1;
     private static int nextRideId = 1;
 
 
@@ -57,14 +56,14 @@ public class TaxiService {
         this.rides = rides;
     }
 
-    public Client registerClient(String name) {
-        Client client = new Client(name);
+    public Client registerClient(String name, String phoneNumber, String mail) {
+        Client client = new Client(name, phoneNumber, mail);
         addUser(client);
         return client;
     }
 
-    public Driver registerDriver(String name, Car car) {
-        Driver driver = new Driver(name, car);
+    public Driver registerDriver(String name, String phoneNumber, String mail, Car car) {
+        Driver driver = new Driver(name, phoneNumber, mail, car);
         addUser(driver);
         return driver;
     }

@@ -5,10 +5,11 @@ public class Client extends User {
     private String name;
     private Ride[] rides;
     private int countRides;
+    private static int nextId = 1;
 
-    public Client(String name) {
-        super(name);
-        this.id = id;
+    public Client(String name,  String phoneNumber, String mail) {
+        super(name, phoneNumber, mail);
+        this.id = nextId++;
     }
 
     public Ride[] getRides() {
