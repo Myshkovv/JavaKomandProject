@@ -1,3 +1,6 @@
+package user;
+
+import ride.Ride;
 
 public class Client extends User {
 

@@ -1,3 +1,7 @@
+package ride;
+
+import user.Client;
+import user.Driver;
 
 public class Ride {
 

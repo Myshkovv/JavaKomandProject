@@ -1,4 +1,10 @@
-import java.util.List;
+package service;
+
+import car.Car;
+import ride.Ride;
+import user.Client;
+import user.Driver;
+import user.User;
 
 public class TaxiService {
 

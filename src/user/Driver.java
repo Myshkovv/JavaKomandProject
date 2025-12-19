@@ -1,3 +1,7 @@
+package user;
+
+import car.Car;
+import ride.Ride;
 
 public class Driver extends User {
 
