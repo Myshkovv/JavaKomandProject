@@ -1,5 +1,5 @@
 package Car;
 
 public interface TarifCalculator {
-    void calculateTariff(Car car);
+    Tariff calculateTariff(Car car);
 }

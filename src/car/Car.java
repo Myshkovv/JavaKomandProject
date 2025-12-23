@@ -1,10 +1,6 @@
 package Car;
 
 public class Car {
-
-    DefaultValidator validator = new DefaultValidator();
-    TariffSelecter tariffselect = new TariffSelecter();
-
     private String name;
     private String number;
     private String color;
@@ -12,7 +8,6 @@ public class Car {
     private int id;
 
     public Car(String name, String number, String color){
-        validator.validate(name, number, color);
         this.name = name;
         this.number = number;
         this.color = color;
@@ -25,15 +20,15 @@ public class Car {
     }
 
     public String getName(){
-        return this.name;
+        return this.name.toLowerCase();
     }
 
     public String getNumber(){
-        return this.number;
+        return this.number.toUpperCase();
     }
 
     public String getColor(){
-        return this.color;
+        return this.color.toLowerCase();
     }
 
 }
