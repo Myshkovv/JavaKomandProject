@@ -1,3 +1,6 @@
+package MapService;
+
+
 public class TripTiming implements Timing{
 
     private Coordinate coordinate1 = new RandomCoordinate();

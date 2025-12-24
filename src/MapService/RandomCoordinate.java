@@ -1,3 +1,5 @@
+package MapService;
+
 import java.util.Random;
 
 public class RandomCoordinate extends Coordinate {

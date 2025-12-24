@@ -1,3 +1,5 @@
+package MapService;
+
 public class Address {
     private final String street;
     private final String city;

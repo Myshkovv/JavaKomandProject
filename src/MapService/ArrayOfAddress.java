@@ -1,3 +1,6 @@
+package MapService;
+
+
 public class ArrayOfAddress {
     private static Address[] data;
     private int size;

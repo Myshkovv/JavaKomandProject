@@ -1,3 +1,6 @@
+package MapService;
+
+
 public class Coordinate {
     private final int x;
     private final int y;

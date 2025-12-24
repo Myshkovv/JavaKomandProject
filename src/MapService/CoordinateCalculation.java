@@ -1,3 +1,6 @@
+package MapService;
+
+
 public class CoordinateCalculation implements DistanceCalculation{
 
     private Coordinate coordinate1;
