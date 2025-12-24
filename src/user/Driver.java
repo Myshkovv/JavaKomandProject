@@ -35,4 +35,16 @@ public class Driver extends User {
     public void setCar(Car car){
         this.car = car;
     }
+
+    public String getTarif(){
+        TariffCalculate calculate = new TariffCalculate();
+        Tariff tariff = calculate.calculateTariff(car);
+        return tariff.getTarif();
+    }
+
+    public String getTarifPrice(){
+        TariffCalculate calculate = new TariffCalculate();
+        Tariff tariff = calculate.calculateTariff(car);
+        return tariff.getTarifPrice();
+    }
 }
