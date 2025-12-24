@@ -5,7 +5,7 @@ import ride.Ride;
 public class UserStory implements addNewRides {
     private int ridesCount = 0;
     private User user;
-    private Ride[] rides = new Ride[ridesCount];
+    private Ride[] rides = new Ride[0];
 
     public UserStory(User user) {
         this.user = user;
@@ -13,13 +13,13 @@ public class UserStory implements addNewRides {
 
     @Override
     public void addRide(Ride ride) {
-        ridesCount++;
         Ride[] newRides = new Ride[rides.length + 1];
         for (int i = 0; i < rides.length; i++) {
             newRides[i] = rides[i];
         }
         newRides[ridesCount] = ride;
         rides = newRides;
+        ridesCount++;
     }
 
     public Ride getRide(int index){
@@ -32,7 +32,7 @@ public class UserStory implements addNewRides {
 
     public void clearRides(Ride[] ride){
         ridesCount = 0;
-        rides = new Ride[ridesCount];
+        rides = new Ride[0];
     }
 
     public int getRidesCount(){
@@ -41,5 +41,17 @@ public class UserStory implements addNewRides {
 
     public int getUser(){
         return user.getId();
+    }
+
+    public Ride[] getAllRides() {
+        Ride[] newRides = new Ride[ridesCount];
+        for (int i = 0; i < ridesCount; i++) {
+            newRides[i] = rides[i];
+        }
+        return newRides;
+    }
+
+    public int getTotalAmount(){
+        return rides.length;
     }
 }
