@@ -29,4 +29,20 @@ public class Ride {
     public void setId(int rideId) {
         this.Id = rideId;
     }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public String getStartAdress() {
+        return startAdress;
+    }
+
+    public String getEndAdress() {
+        return endAdress;
+    }
 }

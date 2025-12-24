@@ -33,17 +33,7 @@ public class UserStory implements addNewRides {
     public Ride[] getRides(){
         return rides;
     }
-    //
-     //
-     //
-    //
-    //
-     //
-     //
-     //
-     //
-     //
-     //
+
     public void clearRides(){
         ridesCount = 0;
         rides = new Ride[0];

@@ -7,7 +7,7 @@ import user.Driver;
 import user.User;
 import user.UserStory;
 
-public class TaxiService {
+public class TaxiService implements AddObjectService, FindObjectByIdService, DeleteObjectService, GetMostActiveObjectService, DisplayObjectService, RegisterObjectService{
     private UserStory[] userStories;
     private User[] users;
     private Driver[] drivers;
@@ -32,37 +32,9 @@ public class TaxiService {
         this.userStories = new UserStory[0];
         this.lenUserStories = 0;
 
-//        for (User user : users) {
-//            addUserStory(user);
-//        }
-    }
-
-    public User[] getUsers() {
-        return users;
-    }
-
-    public Driver[] getDrivers() {
-        return drivers;
-    }
-
-    public Client[] getClients() {
-        return clients;
-    }
-
-    public Ride[] getRides() {
-        return rides;
-    }
-
-    public Client registerClient(String name, String phoneNumber, String mail) {
-        Client client = new Client(name, phoneNumber, mail);
-        addUser(client);
-        return client;
-    }
-
-    public Driver registerDriver(String name, String phoneNumber, String mail, Car car) {
-        Driver driver = new Driver(name, phoneNumber, mail, car);
-        addUser(driver);
-        return driver;
+        for (User user : users) {
+            addUserStory(user);
+        }
     }
 
     public void addUser(User newUser){
@@ -105,26 +77,7 @@ public class TaxiService {
         lenClients++;
     }
 
-    public void registerRide(Client client, Driver driver, String startAdress, String endAdress){
-
-        Ride newRide = new Ride(client, driver, startAdress, endAdress);
-
-        addRide(newRide);
-
-        UserStory clientStory = findOrCreateUserStory(client);
-        if (clientStory != null){
-            clientStory.addRide(newRide);
-        }
-
-        UserStory driverStory = findOrCreateUserStory(driver);
-        if (clientStory != null){
-            driverStory.addRide(newRide);
-        }
-
-    }
-
     public UserStory findOrCreateUserStory(User user){
-
         for (int i = 0; i < lenUserStories; i++){
             if (userStories[i].getUser() == user.getId()){
                 return userStories[i];
@@ -137,11 +90,9 @@ public class TaxiService {
             return userStories[lenUserStories - 1];
         }
         return null;
-
     }
 
     public void addUserStory(User user){
-
         UserStory newUserStory = new UserStory(user);
 
         UserStory[] newUserStories = new UserStory[lenUserStories + 1];
@@ -195,13 +146,6 @@ public class TaxiService {
         return new Ride[0];
     }
 
-    public void clearUserRides(int userId) {
-        UserStory userStory = getUserStory(userId);
-        if (userStory != null) {
-            userStory.clearRides();
-            System.out.println("История поездок пользователя ID=" + userId + " очищена");
-        }
-    }
 
     public User findUserById(int id) {
         for (int i = 0; i < lenUsers; i++) {
@@ -211,6 +155,7 @@ public class TaxiService {
         }
         return null;
     }
+
     public Client findClientById(int id) {
         for (int i = 0; i < lenClients; i++) {
             if (clients[i].getId() == id) {
@@ -238,71 +183,83 @@ public class TaxiService {
         return null;
     }
 
-    /**
-     * ДОПОЛНИТЬ
-     */
-    public void displayUsers() {
-        System.out.println("\n=== ВСЕ ПОЛЬЗОВАТЕЛИ (" + lenUsers + ") ===");
-        for (int i = 0; i < lenUsers; i++) {
-            System.out.println(users[i].getId() + ": " + users[i].getName());
-        }
-    }
-    /**
-     * ДОПОЛНИТЬ
-     */
-    public void displayDrivers() {
-        System.out.println("\n=== ВСЕ ПОЛЬЗОВАТЕЛИ (" + lenDrivers + ") ===");
-        for (int i = 0; i < lenDrivers; i++) {
-            System.out.println(drivers[i].getId() + ": " + drivers[i].getName());
-        }
-    }
-    /**
-     * ДОПОЛНИТЬ
-     */
-    public void displayClients() {
-        System.out.println("\n=== ВСЕ ПОЛЬЗОВАТЕЛИ (" + lenClients + ") ===");
-        for (int i = 0; i < lenClients; i++) {
-            System.out.println(clients[i].getId() + ": " + clients[i].getName());
-        }
-    }
-    /**
-     * ДОПОЛНИТЬ
-     */
-    public void displayRides() {
-        System.out.println("\n=== ВСЕ ПОЛЬЗОВАТЕЛИ (" + lenRides + ") ===");
-        for (int i = 0; i < lenRides; i++) {
-            System.out.println(rides[i].getId() + ": ");
-        }
-    }
-
-
-
     public void deleteUser(int deleteId){
+        int userIndex = -1;
         for (int i = 0; i < lenUsers; i++){
             if (users[i] != null && users[i].getId() == deleteId){
+                userIndex = i;
                 if (users[i] instanceof Driver){
                     deleteDriverFromArray((Driver) users[i]);
                 } else if (users[i] instanceof Client) {
                     deleteClientFromArray((Client) users[i]);
                 }
-
                 users[i] = null;
             }
         }
+        if (userIndex == -1) {
+            return;
+        }
+        deleteUserStory(users[deleteId]);
+        for (int i = userIndex; i < lenUsers - 1; i++) {
+            users[i] = users[i + 1];
+        }
+        users[lenUsers - 1] = null;
+        lenUsers--;
     }
     public void deleteDriverFromArray(Driver driver){
+        int driverIndex = -1;
+
         for (int i = 0; i< lenDrivers; i++){
             if (drivers[i] != null && drivers[i].getId() == driver.getId()) {
+                driverIndex = i;
                 drivers[i] = null;
             }
         }
+        if (driverIndex == -1){
+            return;
+        }
+        for (int i = driverIndex; i < lenDrivers - 1; i++){
+            drivers[i] = drivers[i+1];
+        }
+        drivers[lenDrivers - 1] = null;
+        lenDrivers--;
     }
     public void deleteClientFromArray(Client client){
+        int clientIndex = -1;
+
         for (int i = 0; i< lenClients; i++){
             if (clients[i] != null && clients[i].getId() == client.getId()) {
+                clientIndex = i;
                 clients[i] = null;
             }
         }
+        if (clientIndex == -1) {
+            return;
+        }
+        for (int i = clientIndex; i < lenClients - 1; i++) {
+            clients[i] = clients[i + 1];
+        }
+        clients[lenClients - 1] = null;
+        lenClients--;
+    }
+
+    public void deleteUserStory(User user){
+        int storyIndex = -1;
+
+        for (int i = 0; i< lenUserStories; i++){
+            if (userStories[i] != null && userStories[i].getUser() == user.getId()){
+                storyIndex = i;
+                userStories[i] = null;
+            }
+        }
+        if (storyIndex == -1) {
+            return;
+        }
+        for (int i = storyIndex; i< lenUserStories -1; i++){
+            userStories[i] = userStories[i + 1];
+        }
+        userStories[lenUserStories - 1] = null;
+        lenUserStories--;
     }
 
     public User[] findUsersByName(String name){
@@ -327,51 +284,200 @@ public class TaxiService {
         return result;
     }
 
-    public Driver findDriversByCar(Car car){
+    public Driver findDriversByCarNumber(String number){
         for (int i = 0; i < lenDrivers; i++){
-            if (drivers[i] != null && drivers[i].getCar() == car){
+            if (drivers[i] != null && drivers[i].getCar().getNumber().equals(number)){
                 return drivers[i];
             }
         }
         return null;
     }
 
-//    public Client getMostActiveClient() {
-//        if (lenClients == 0) {
-//            return null;
-//        }
-//        Client mostActiveClient = clients[0];
-//        for (int i = 0; i < lenClients; i++){
-//            if (clients[i].getCountRides() >= mostActiveClient.getCountRides()){
-//                mostActiveClient = clients[i];
-//            }
-//        }
-//        return mostActiveClient;
-//    }
-//
-//    public Driver getMostActiveDriver() {
-//        if (lenDrivers == 0) {
-//            return null;
-//        }
-//        Driver mostActiveDriver = drivers[0];
-//        for (int i = 0; i < lenDrivers; i++){
-//            if (drivers[i].getCountRides() >= mostActiveDriver.getCountRides()){
-//                mostActiveDriver = drivers[i];
-//            }
-//        }
-//        return mostActiveDriver;
-//    }
+    public Object[] getMostActiveClient() {
+        if (lenClients == 0) {
+            return null;
+        }
 
+        Client mostActiveClient = clients[0];
+        int maxRides = 0;
 
+        for (int i = 0; i < lenClients; i++){
+            UserStory userStory = getUserStory(clients[i].getId());
+            if (userStory != null){
+                int thisRides = userStory.getRidesCount();
+                if (thisRides > maxRides){
+                    maxRides = thisRides;
+                    mostActiveClient = clients[i];
+                }
+            }
+        }
+        Object[] result = new Object[2];
+        result[0] = mostActiveClient;
+        result[1] = maxRides;
+        return result;
+    }
 
+    public Object[] getMostActiveDriver() {
+        if (lenDrivers == 0) {
+            return null;
+        }
 
+        Driver mostActiveDriver = drivers[0];
+        int maxRides = 0;
 
+        for (int i = 0; i < lenDrivers; i++){
+            UserStory userStory = getUserStory(drivers[i].getId());
+            if (userStory != null){
+                int thisRides = userStory.getRidesCount();
+                if (thisRides > maxRides){
+                    maxRides = thisRides;
+                    mostActiveDriver = drivers[i];
+                }
+            }
+        }
 
+        Object[] result = new Object[2];
+        result[0] = mostActiveDriver;
+        result[1] = maxRides;
+        return result;
+    }
 
+    public void displayUsers() {
+        System.out.println("\n=== ВСЕ ПОЛЬЗОВАТЕЛИ (" + lenUsers + ") ===");
+        for (int i = 0; i < lenUsers; i++) {
+            System.out.println(users[i].getId() + ": " + users[i].getName()  + ": " + users[i].getPhoneNumber()  + ": " + users[i].getMail());
+        }
+    }
 
+    public void displayDrivers() {
+        System.out.println("\n=== ВСЕ ВОДИТЕЛИ (" + lenDrivers + ") ===");
+        for (int i = 0; i < lenDrivers; i++) {
+            System.out.println(drivers[i].getId() + ": " + drivers[i].getName()  + ": " + drivers[i].getPhoneNumber()  + ": " + drivers[i].getMail());
+            System.out.println("   Машина : " + drivers[i].getCar().getId() + ": " +  drivers[i].getCar().getName() + ": " + drivers[i].getCar().getNumber() + ": " + drivers[i].getCar().getColor());
+        }
+    }
 
+    public void displayClients() {
+        System.out.println("\n=== ВСЕ КЛИЕНТЫ (" + lenClients + ") ===");
+        for (int i = 0; i < lenClients; i++) {
+            System.out.println(clients[i].getId() + ": " + clients[i].getName()  + ": " + clients[i].getPhoneNumber()  + ": " + clients[i].getMail());
+        }
+    }
 
+    public void displayRides() {
+        System.out.println("\n=== ВСЕ ПОЕЗДКИ (" + lenRides + ") ===");
+        for (int i = 0; i < lenRides; i++) {
+            System.out.println(rides[i].getId() + ": водитель - " + rides[i].getDriver().getName()  + ": клиент - " + rides[i].getClient().getName());
+            System.out.println("   Начальная точка - " + rides[i].getStartAdress() + ": Конечная точка - " + rides[i].getEndAdress());
+        }
+    }
 
+    public void displayMostActiveClient(){
+        Object[] result = getMostActiveClient();
+        Client client = (Client) result[0];
+        int countRides = (int) result[1];
+        System.out.println("\n=== Самый активный клиент ===");
+        System.out.println(client.getId() + ": " + client.getName() + ": " + "количество поездок - " + countRides);
+    }
+
+    public void displayMostActiveDriver(){
+        Object[] result = getMostActiveDriver();
+        Driver driver = (Driver) result[0];
+        int countRides = (int) result[1];
+        System.out.println("\n=== Самый активный водитель ===");
+        System.out.println(driver.getId() + ": " + driver.getName() + ": " + "количество поездок - " + countRides);
+    }
+
+    public void displayUsersByName(String name){
+        User[] usersByName = findUsersByName(name);
+        System.out.println("\n=== Пользователи с именем - " + name);
+        for (int i = 0; i < usersByName.length; i++){
+            System.out.println(usersByName[i].getId() + ": " + usersByName[i].getName() + ": " + usersByName[i].getPhoneNumber() + ": " + usersByName[i].getMail());
+        }
+    }
+
+    public void displayDriverByCar(String number){
+        Driver driverByCar = findDriversByCarNumber(number);
+        System.out.println("\n=== Водитель с машиной - " + number);
+        System.out.println(driverByCar.getId() + ": " + driverByCar.getName() + ": " + driverByCar.getPhoneNumber() + ": " + driverByCar.getMail());
+    }
+
+    public void displayDeleteUser(int userId){
+        deleteUser(userId);
+        System.out.println("Удален пользователь ID= " + userId);
+    }
+
+    public void clearUserRides(int userId) {
+        UserStory userStory = getUserStory(userId);
+        if (userStory != null) {
+            userStory.clearRides();
+            System.out.println("История поездок пользователя ID=" + userId + " очищена");
+        }
+    }
+
+    public void displayUserRides(int userId){
+        Ride[] userRides = getUserRides(userId);
+        System.out.println("\n=== Поездки пользователя ID= "+ userId);
+        for (int i =0; i< userRides.length; i++){
+            System.out.println(rides[i].getId() + ": водитель - " + rides[i].getDriver().getName()  + ": клиент - " + rides[i].getClient().getName());
+            System.out.println("   Начальная точка - " + rides[i].getStartAdress() + ": Конечная точка - " + rides[i].getEndAdress());
+        }
+    }
+
+    public void displayUser(int userId){
+        System.out.println("\n=== Пользователь ID= " + userId);
+        User user = findUserById(userId);
+        System.out.println(user.getId() + ": " + user.getName() + ": " + user.getPhoneNumber() + ": " + user.getMail());
+    }
+
+    public void displayClient(int clientId){
+        System.out.println("\n=== Клиент ID= " + clientId);
+        Client client = findClientById(clientId);
+        System.out.println(client.getId() + ": " + client.getName() + ": " + client.getPhoneNumber() + ": " + client.getMail());
+    }
+
+    public void displayDriver(int driverId){
+        System.out.println("\n=== Водитель ID= " + driverId);
+        Driver driver = findDriverById(driverId);
+        System.out.println(driver.getId() + ": " + driver.getName() + ": " + driver.getPhoneNumber() + ": " + driver.getMail());
+        System.out.println("   Машина : " + driver.getCar().getId() + ": " +  driver.getCar().getName() + ": " + driver.getCar().getNumber() + ": " + driver.getCar().getColor());
+    }
+
+    public void displayRide(int rideId){
+        System.out.println("\n=== Поездка ID= " + rideId);
+        Ride ride = findRideById(rideId);
+        System.out.println(ride.getId() + ": водитель - " + ride.getDriver().getName()  + ": клиент - " + ride.getClient().getName());
+        System.out.println("   Начальная точка - " + ride.getStartAdress() + ": Конечная точка - " + ride.getEndAdress());
+    }
+
+    public Client registerClient(String name, String phoneNumber, String mail) {
+        Client client = new Client(name, phoneNumber, mail);
+        addUser(client);
+        return client;
+    }
+
+    public Driver registerDriver(String name, String phoneNumber, String mail, Car car) {
+        Driver driver = new Driver(name, phoneNumber, mail, car);
+        addUser(driver);
+        return driver;
+    }
+
+    public Ride registerRide(Client client, Driver driver, String startAdress, String endAdress){
+        Ride newRide = new Ride(client, driver, startAdress, endAdress);
+
+        addRide(newRide);
+
+        UserStory clientStory = findOrCreateUserStory(client);
+        if (clientStory != null){
+            clientStory.addRide(newRide);
+        }
+
+        UserStory driverStory = findOrCreateUserStory(driver);
+        if (driverStory != null){
+            driverStory.addRide(newRide);
+        }
+        return newRide;
+    }
 
 
 }
