@@ -61,7 +61,7 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
         for (int i = 0; i < lenDrivers; i++) {
             newDrivers[i] = drivers[i];
         }
-        newDrivers[lenUsers] = newDriver;
+        newDrivers[lenDrivers] = newDriver;
         drivers = newDrivers;
         lenDrivers++;
 
@@ -72,7 +72,7 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
         for (int i = 0; i < lenClients; i++) {
             newClients[i] = clients[i];
         }
-        newClients[lenUsers] = newClient;
+        newClients[lenClients] = newClient;
         clients = newClients;
         lenClients++;
     }
@@ -374,6 +374,11 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
 
     public void displayMostActiveClient(){
         Object[] result = getMostActiveClient();
+        if (result == null){
+            System.out.println("Клиентов еще нет");
+            return;
+        }
+
         Client client = (Client) result[0];
         int countRides = (int) result[1];
         System.out.println("\n=== Самый активный клиент ===");
@@ -382,6 +387,10 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
 
     public void displayMostActiveDriver(){
         Object[] result = getMostActiveDriver();
+        if (result == null){
+            System.out.println("Водителей еще нет");
+            return;
+        }
         Driver driver = (Driver) result[0];
         int countRides = (int) result[1];
         System.out.println("\n=== Самый активный водитель ===");

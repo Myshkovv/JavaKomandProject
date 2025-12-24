@@ -94,7 +94,9 @@ public class ConsoleMenu implements RegisterObjectInConsoleService{
         String mail = scanner.nextLine();
 
         Client client = taxiService.registerClient(name, phoneNumber, mail);
+        System.out.println("----------------------------");
         System.out.println("Клиент успешно зарегистрирован! ID= " + client.getId());
+        System.out.println("----------------------------");
     }
     public void registerDriver(){
         System.out.println("\n=== РЕГИСТРАЦИЯ ВОДИТЕЛЯ ===");
@@ -115,7 +117,9 @@ public class ConsoleMenu implements RegisterObjectInConsoleService{
         Car car = new Car(carName, carNumber, carColor);
 
         Driver driver = taxiService.registerDriver(name, phoneNumber, mail, car);
+        System.out.println("----------------------------");
         System.out.println("Водитель успешно зарегистрирован! ID= " + driver.getId());
+        System.out.println("----------------------------");
     }
     public void registerRide(){
         System.out.println("\n=== РЕГИСТРАЦИЯ ПОЕЗДКИ ===");
@@ -134,7 +138,9 @@ public class ConsoleMenu implements RegisterObjectInConsoleService{
         String endAddress = scanner.nextLine();
 
         Ride ride = taxiService.registerRide(client, driver, startAddress, endAddress);
+        System.out.println("----------------------------");
         System.out.println("Поездка успешно зарегистрирована! ID= " + ride.getId());
+        System.out.println("----------------------------");
     }
 
     public void statistic() {
