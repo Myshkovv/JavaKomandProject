@@ -1,4 +1,4 @@
-package Car;
+package car;
 
 public class Tariff {
     private int tarifprice;
@@ -9,7 +9,7 @@ public class Tariff {
         this.tarif = tarif;
     }
 
-    public int getTarifprice() {
+    public int getTarifPrice() {
         return this.tarifprice;
     }
 

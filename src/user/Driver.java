@@ -1,6 +1,8 @@
 package user;
 
 import car.Car;
+import car.TariffCalculate;
+import car.Tariff;
 
 public class Driver extends User {
     private Car car;
@@ -42,7 +44,7 @@ public class Driver extends User {
         return tariff.getTarif();
     }
 
-    public String getTarifPrice(){
+    public int getTarifPrice(){
         TariffCalculate calculate = new TariffCalculate();
         Tariff tariff = calculate.calculateTariff(car);
         return tariff.getTarifPrice();
