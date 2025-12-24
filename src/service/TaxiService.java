@@ -5,18 +5,19 @@ import ride.Ride;
 import user.Client;
 import user.Driver;
 import user.User;
+import user.UserStory;
 
 public class TaxiService {
-
+    private UserStory[] userStories;
     private User[] users;
     private Driver[] drivers;
     private Client[] clients;
     private Ride[] rides;
+    private int lenUserStories;
     private int lenUsers;
     private int lenDrivers;
     private int lenClients;
     private int lenRides;
-    private static int nextRideId = 1;
 
 
     public TaxiService(User[] users, Driver[] drivers, Client[] clients, Ride[] rides){
@@ -28,38 +29,28 @@ public class TaxiService {
         this.lenDrivers = this.drivers.length;
         this.lenClients = this.clients.length;
         this.lenRides = this.rides.length;
+        this.userStories = new UserStory[0];
+        this.lenUserStories = 0;
+
+//        for (User user : users) {
+//            addUserStory(user);
+//        }
     }
 
     public User[] getUsers() {
         return users;
     }
 
-    public void setUsers(User[] users) {
-        this.users = users;
-    }
-
     public Driver[] getDrivers() {
         return drivers;
-    }
-
-    public void setDrivers(Driver[] drivers) {
-        this.drivers = drivers;
     }
 
     public Client[] getClients() {
         return clients;
     }
 
-    public void setClients(Client[] clients) {
-        this.clients = clients;
-    }
-
     public Ride[] getRides() {
         return rides;
-    }
-
-    public void setRides(Ride[] rides) {
-        this.rides = rides;
     }
 
     public Client registerClient(String name, String phoneNumber, String mail) {
@@ -81,12 +72,15 @@ public class TaxiService {
         }
         newUsers[lenUsers] = newUser;
         users = newUsers;
+        lenUsers++;
 
         if (newUser instanceof Driver driver) {
-            addDriver(driver);//Не знал об это, идея помогла сократить код)
+            addDriver(driver);
         } else if (newUser instanceof Client client) {
             addClient(client);
         }
+
+        addUserStory(newUser);
 
     }
 
@@ -97,6 +91,8 @@ public class TaxiService {
         }
         newDrivers[lenUsers] = newDriver;
         drivers = newDrivers;
+        lenDrivers++;
+
     }
 
     public void addClient(Client newClient){
@@ -106,6 +102,56 @@ public class TaxiService {
         }
         newClients[lenUsers] = newClient;
         clients = newClients;
+        lenClients++;
+    }
+
+    public void registerRide(Client client, Driver driver, String startAdress, String endAdress){
+
+        Ride newRide = new Ride(client, driver, startAdress, endAdress);
+
+        addRide(newRide);
+
+        UserStory clientStory = findOrCreateUserStory(client);
+        if (clientStory != null){
+            clientStory.addRide(newRide);
+        }
+
+        UserStory driverStory = findOrCreateUserStory(driver);
+        if (clientStory != null){
+            driverStory.addRide(newRide);
+        }
+
+    }
+
+    public UserStory findOrCreateUserStory(User user){
+
+        for (int i = 0; i < lenUserStories; i++){
+            if (userStories[i].getUser() == user.getId()){
+                return userStories[i];
+            }
+        }
+
+        addUserStory(user);
+
+        if (lenUserStories > 0) {
+            return userStories[lenUserStories - 1];
+        }
+        return null;
+
+    }
+
+    public void addUserStory(User user){
+
+        UserStory newUserStory = new UserStory(user);
+
+        UserStory[] newUserStories = new UserStory[lenUserStories + 1];
+        for (int i = 0; i < lenUserStories; i++) {
+            newUserStories[i] = userStories[i];
+        }
+        newUserStories[lenUserStories] = newUserStory;
+        userStories = newUserStories;
+        lenUserStories++;
+
     }
 
     public void addRide(Ride newRide){
@@ -115,6 +161,46 @@ public class TaxiService {
         }
         newRides[lenUsers] = newRide;
         rides = newRides;
+        lenRides++;
+    }
+
+    public Ride[] getUserRides(int userId){
+        for (int i = 0; i < lenUserStories; i++){
+            if (userStories[i].getUser() == userId){
+                int ridesCount = userStories[i].getRidesCount();
+                Ride[] userRides = new Ride[ridesCount];
+                for (int j = 0; j < ridesCount; j++){
+                    userRides[j] = userStories[i].getRide(j);
+                }
+            }
+        }
+        return new Ride[0];
+    }
+
+    public UserStory getUserStory(int userId){
+        for (int i = 0; i < lenUserStories; i++){
+            if (userStories[i].getUser() == userId){
+                return userStories[i];
+            }
+        }
+        return null;
+    }
+
+    public Ride[] getUserRidesByName(String userName){
+        for (int i = 0; i < lenUsers; i++){
+            if (users[i].getName().equals(userName)){
+                return getUserRides(users[i].getId());
+            }
+        }
+        return new Ride[0];
+    }
+
+    public void clearUserRides(int userId) {
+        UserStory userStory = getUserStory(userId);
+        if (userStory != null) {
+            userStory.clearRides();
+            System.out.println("История поездок пользователя ID=" + userId + " очищена");
+        }
     }
 
     public User findUserById(int id) {
@@ -250,31 +336,31 @@ public class TaxiService {
         return null;
     }
 
-    public Client getMostActiveClient() {
-        if (lenClients == 0) {
-            return null;
-        }
-        Client mostActiveClient = clients[0];
-        for (int i = 0; i < lenClients; i++){
-            if (clients[i].getCountRides() >= mostActiveClient.getCountRides()){
-                mostActiveClient = clients[i];
-            }
-        }
-        return mostActiveClient;
-    }
-
-    public Driver getMostActiveDriver() {
-        if (lenDrivers == 0) {
-            return null;
-        }
-        Driver mostActiveDriver = drivers[0];
-        for (int i = 0; i < lenDrivers; i++){
-            if (drivers[i].getCountRides() >= mostActiveDriver.getCountRides()){
-                mostActiveDriver = drivers[i];
-            }
-        }
-        return mostActiveDriver;
-    }
+//    public Client getMostActiveClient() {
+//        if (lenClients == 0) {
+//            return null;
+//        }
+//        Client mostActiveClient = clients[0];
+//        for (int i = 0; i < lenClients; i++){
+//            if (clients[i].getCountRides() >= mostActiveClient.getCountRides()){
+//                mostActiveClient = clients[i];
+//            }
+//        }
+//        return mostActiveClient;
+//    }
+//
+//    public Driver getMostActiveDriver() {
+//        if (lenDrivers == 0) {
+//            return null;
+//        }
+//        Driver mostActiveDriver = drivers[0];
+//        for (int i = 0; i < lenDrivers; i++){
+//            if (drivers[i].getCountRides() >= mostActiveDriver.getCountRides()){
+//                mostActiveDriver = drivers[i];
+//            }
+//        }
+//        return mostActiveDriver;
+//    }
 
 
 
