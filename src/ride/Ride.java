@@ -5,7 +5,8 @@ import user.Driver;
 
 public class Ride {
 
-    private int Id;
+    private int id;
+    private static int nextid = 1;
     private Client client;
     private Driver driver;
     private String startAdress;
@@ -17,17 +18,19 @@ public class Ride {
         this.driver = driver;
         this.startAdress = startAdress;
         this.endAdress = endAdress;
+        this.id = nextid;
+        nextid++;
 
     }
 
 
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int rideId) {
-        this.Id = rideId;
+        this.id = rideId;
     }
 
     public Client getClient() {

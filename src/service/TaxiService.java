@@ -110,7 +110,7 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
         for (int i = 0; i < lenRides; i++) {
             newRides[i] = rides[i];
         }
-        newRides[lenUsers] = newRide;
+        newRides[lenRides] = newRide;
         rides = newRides;
         lenRides++;
     }
@@ -123,6 +123,7 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
                 for (int j = 0; j < ridesCount; j++){
                     userRides[j] = userStories[i].getRide(j);
                 }
+                return userRides;
             }
         }
         return new Ride[0];
@@ -263,22 +264,18 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
     }
 
     public User[] findUsersByName(String name){
-        User[] result = new User[lenUsers];
         int count = 0;
-        for (int i = 0; i < lenUsers; i++){
-            if (users[i] != null && users[i].getName().equals(name)){
+        for (int i = 0; i < lenUsers; i++) {
+            if (users[i] != null && users[i].getName().equals(name)) {
                 count++;
-                if (count ==1){
-                    result[count-1] = users[i];
-                } else {
-                    count++;
-                    User[] newResult = new User[count];
-                    for (int j = 0; j < result.length; j++){
-                        newResult[j] = result[j];
-                    }
-                    newResult[count-1] = users[i];
-                    result = newResult;
-                }
+            }
+        }
+        User[] result = new User[count];
+        int index = 0;
+        for (int i = 0; i < lenUsers; i++) {
+            if (users[i] != null && users[i].getName().equals(name)) {
+                result[index] = users[i];
+                index++;
             }
         }
         return result;
@@ -399,7 +396,11 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
 
     public void displayUsersByName(String name){
         User[] usersByName = findUsersByName(name);
-        System.out.println("\n=== Пользователи с именем - " + name);
+        if (usersByName.length == 0){
+            System.out.println("У нас таких нет");
+            return;
+        }
+        System.out.println("\n=== Пользователи с именем - " + name + " - " + usersByName.length);
         for (int i = 0; i < usersByName.length; i++){
             System.out.println(usersByName[i].getId() + ": " + usersByName[i].getName() + ": " + usersByName[i].getPhoneNumber() + ": " + usersByName[i].getMail());
         }
@@ -407,6 +408,10 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
 
     public void displayDriverByCar(String number){
         Driver driverByCar = findDriversByCarNumber(number);
+        if (driverByCar == null){
+            System.out.println("Машин с таким номером нет");
+            return;
+        }
         System.out.println("\n=== Водитель с машиной - " + number);
         System.out.println(driverByCar.getId() + ": " + driverByCar.getName() + ": " + driverByCar.getPhoneNumber() + ": " + driverByCar.getMail());
     }
@@ -422,10 +427,17 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
             userStory.clearRides();
             System.out.println("История поездок пользователя ID=" + userId + " очищена");
         }
+        else {
+            System.out.println("Пользователя с таким ID не существует");
+        }
     }
 
     public void displayUserRides(int userId){
         Ride[] userRides = getUserRides(userId);
+        if (users.length == 0){
+            System.out.println("Поездок нет");
+            return;
+        }
         System.out.println("\n=== Поездки пользователя ID= "+ userId);
         for (int i =0; i< userRides.length; i++){
             System.out.println(rides[i].getId() + ": водитель - " + rides[i].getDriver().getName()  + ": клиент - " + rides[i].getClient().getName());
@@ -436,18 +448,30 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
     public void displayUser(int userId){
         System.out.println("\n=== Пользователь ID= " + userId);
         User user = findUserById(userId);
+        if (user == null){
+            System.out.println("ID не найдено");
+            return;
+        }
         System.out.println(user.getId() + ": " + user.getName() + ": " + user.getPhoneNumber() + ": " + user.getMail());
     }
 
     public void displayClient(int clientId){
         System.out.println("\n=== Клиент ID= " + clientId);
         Client client = findClientById(clientId);
+        if (client == null){
+            System.out.println("ID не найдено");
+            return;
+        }
         System.out.println(client.getId() + ": " + client.getName() + ": " + client.getPhoneNumber() + ": " + client.getMail());
     }
 
     public void displayDriver(int driverId){
         System.out.println("\n=== Водитель ID= " + driverId);
         Driver driver = findDriverById(driverId);
+        if (driver == null){
+            System.out.println("ID не найдено");
+            return;
+        }
         System.out.println(driver.getId() + ": " + driver.getName() + ": " + driver.getPhoneNumber() + ": " + driver.getMail());
         System.out.println("   Машина : " + driver.getCar().getId() + ": " +  driver.getCar().getName() + ": " + driver.getCar().getNumber() + ": " + driver.getCar().getColor());
     }
@@ -455,6 +479,10 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
     public void displayRide(int rideId){
         System.out.println("\n=== Поездка ID= " + rideId);
         Ride ride = findRideById(rideId);
+        if (ride == null){
+            System.out.println("ID не найдено");
+            return;
+        }
         System.out.println(ride.getId() + ": водитель - " + ride.getDriver().getName()  + ": клиент - " + ride.getClient().getName());
         System.out.println("   Начальная точка - " + ride.getStartAdress() + ": Конечная точка - " + ride.getEndAdress());
     }
