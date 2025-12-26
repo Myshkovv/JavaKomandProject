@@ -27,4 +27,18 @@ public class MakeAddress {
         System.out.println("Не удалось создать уникальный адрес" + street + "," + city);
         return null;
     }
+
+    public int getDistance(Address start, Address end){
+        Coordinate coordinateStart = start.getCoordinate();
+        Coordinate coordinateEnd = end.getCoordinate();
+        DistanceCalculation distance = new CoordinateCalculation(coordinateStart, coordinateEnd);
+        return distance.distance();
+    }
+
+    public int getTime(Address start, Address end, int averageSpeed){
+        Coordinate coordinateStart = start.getCoordinate();
+        Coordinate coordinateEnd = end.getCoordinate();
+        Timing time = new TripTiming(coordinateStart, coordinateEnd, averageSpeed);
+        return time.time();
+    }
 }
