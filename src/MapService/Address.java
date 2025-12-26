@@ -20,4 +20,7 @@ public class Address {
     public Coordinate getCoordinate() {
         return coordinate;
     }
+    public String getFullAddress() {
+        return street + ", " + city;
+    }
 }

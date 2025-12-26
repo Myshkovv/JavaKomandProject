@@ -1,5 +1,6 @@
 package service;
 
+import MapService.Address;
 import car.Car;
 import ride.Ride;
 import user.Client;

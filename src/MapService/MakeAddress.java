@@ -19,7 +19,7 @@ public class MakeAddress {
             Address newAddress = new Address(street, city, coordinate);
             if (!addressArray.contains(newAddress)){
                 addressArray.addAddress(newAddress);
-                System.out.println("Создан и добавлен новый адрес: " + newAddress);
+                System.out.println("Создан и добавлен новый адрес: " + newAddress.getFullAddress());
                 return newAddress;
             }
             attempts++;
