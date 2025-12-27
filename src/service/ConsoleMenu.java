@@ -131,13 +131,19 @@ public class ConsoleMenu implements RegisterObjectInConsoleService{
         Driver driver = taxiService.findDriverById(driverID);
         Client client = taxiService.findClientById(clientID);
 
-        System.out.print("Адрес отправления: ");
-        String startAddress = scanner.nextLine();
+        System.out.println("Адрес отправления");
+        System.out.print("Введите город: ");
+        String startCity = scanner.nextLine();
+        System.out.print("Введите улицу: ");
+        String startStreet = scanner.nextLine();
 
-        System.out.print("Адрес назначения: ");
-        String endAddress = scanner.nextLine();
+        System.out.println("Адрес назначения");
+        System.out.print("Введите город: ");
+        String endCity = scanner.nextLine();
+        System.out.print("Введите улицу: ");
+        String endStreet = scanner.nextLine();
 
-        Ride ride = taxiService.registerRide(client, driver, startAddress, endAddress);
+        Ride ride = taxiService.registerRide(client, driver, startCity, startStreet, endCity, endStreet);
         System.out.println("----------------------------");
         System.out.println("Поездка успешно зарегистрирована! ID= " + ride.getId());
         System.out.println("----------------------------");

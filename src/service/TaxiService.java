@@ -487,7 +487,7 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
         System.out.println(ride.getId() + ": Водитель - " + ride.getDriver().getName()  + ": Клиент - " + ride.getClient().getName());
         System.out.println("   Начальная точка - " + ride.getStartAdress() + ": Конечная точка - " + ride.getEndAdress());
         System.out.println("   Дистанция - " + ride.getDistance() + ": Время - " + ride.getRideTime());
-        System.out.println("   Тариф - " + ride.getTariff());
+        System.out.println("   Тариф - " + ride.getTariff() + ": Стоимость - " + ride.getCost());
     }
 
     public Client registerClient(String name, String phoneNumber, String mail) {
@@ -502,8 +502,8 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
         return driver;
     }
 
-    public Ride registerRide(Client client, Driver driver, String startAdress, String endAdress){
-        Ride newRide = new Ride(client, driver, startAdress, endAdress);
+    public Ride registerRide(Client client, Driver driver, String startStreet, String startCity, String endStreet, String endCity){
+        Ride newRide = new Ride(client, driver, startStreet, startCity, endStreet, endCity);
 
         addRide(newRide);
 

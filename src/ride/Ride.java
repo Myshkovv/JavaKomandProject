@@ -23,20 +23,22 @@ public class Ride {
     private int tariffPrice;
     private ArrayOfAddress addressArray = new ArrayOfAddress();
     private int rideTime;
+    private int cost;
 
 
-    public Ride(Client client, Driver driver, String startAdress, String endAdress){
+    public Ride(Client client, Driver driver, String startStreet, String startCity, String endStreet, String endCity){
 
         MakeAddress mk = new MakeAddress(addressArray);
         this.client = client;
         this.driver = driver;
-        this.startAdress = mk.createAddress(startAdress, "Казань");
-        this.endAdress = mk.createAddress(endAdress, "Казань");
+        this.startAdress = mk.createAddress(startStreet, startCity);
+        this.endAdress = mk.createAddress(endStreet, endCity);
         this.id = nextid;
         this.tariff = driver.getTarif();
         this.tariffPrice = driver.getTarifPrice();
         this.distance = mk.getDistance(this.startAdress, this.endAdress);
         this.rideTime = mk.getTime(this.startAdress, this.endAdress, 60);
+        this.cost = tariffPrice * distance;
         nextid++;
         
     }
@@ -77,5 +79,9 @@ public class Ride {
 
     public int getRideTime() {
         return rideTime;
+    }
+
+    public int getCost() {
+        return cost;
     }
 }
