@@ -38,7 +38,7 @@ public class Ride {
         this.distance = mk.getDistance(this.startAdress, this.endAdress);
         this.rideTime = mk.getTime(this.startAdress, this.endAdress, 60);
         nextid++;
-
+        
     }
 
 
@@ -65,5 +65,17 @@ public class Ride {
 
     public String getEndAdress() {
         return endAdress.getFullAddress();
+    }
+
+    public String getTariff() {
+        return tariff;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public int getRideTime() {
+        return rideTime;
     }
 }

@@ -484,8 +484,10 @@ public class TaxiService implements AddObjectService, FindObjectByIdService, Del
             System.out.println("ID не найдено");
             return;
         }
-        System.out.println(ride.getId() + ": водитель - " + ride.getDriver().getName()  + ": клиент - " + ride.getClient().getName());
+        System.out.println(ride.getId() + ": Водитель - " + ride.getDriver().getName()  + ": Клиент - " + ride.getClient().getName());
         System.out.println("   Начальная точка - " + ride.getStartAdress() + ": Конечная точка - " + ride.getEndAdress());
+        System.out.println("   Дистанция - " + ride.getDistance() + ": Время - " + ride.getRideTime());
+        System.out.println("   Тариф - " + ride.getTariff());
     }
 
     public Client registerClient(String name, String phoneNumber, String mail) {
